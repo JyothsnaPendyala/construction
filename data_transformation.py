@@ -145,7 +145,11 @@ def transform_data():
                     # Bounding box to tensor.
                     boxes = torch.as_tensor(boxes, dtype=torch.float32)
                     # Area of the bounding boxes.
-                    area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+                    if len(boxes.size()) == 1:
+                        # Skip calculation for single-dimensional boxes
+                        area = None  # Or whatever value you want to assign
+                    else:
+                        area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
                     # No crowd instances.
                     iscrowd = torch.zeros((boxes.shape[0],), dtype=torch.int64)
                     # Labels to tensor.
