@@ -106,7 +106,10 @@ def transform_data():
             image = cv2.imread(image_path)
             # Convert BGR to RGB color format.
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
+            print("shape image org",image.shape)
+            
             image_resized = cv2.resize(image, (self.width, self.height))
+            print("shape image mod",image_resized.shape)
             image_resized /= 255.0
             
             # Capture the corresponding XML file for getting the annotations.
