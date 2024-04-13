@@ -139,7 +139,6 @@ def transform_data():
                     xmax, ymax, image_width, image_height
                 )
                 
-                print("bpxes--------------------", boxes)
                 print("xmin----------------------", xmin, ymin, xmax, ymax)
 
                 orig_boxes.append([xmin, ymin, xmax, ymax])
@@ -150,9 +149,10 @@ def transform_data():
                 xmax_final = (xmax/image_width)*self.width
                 ymin_final = (ymin/image_height)*self.height
                 ymax_final = (ymax/image_height)*self.height
-                
+
                 boxes.append([xmin_final, ymin_final, xmax_final, ymax_final])
-                    
+                print("bpxes--------------------", boxes)
+                
             boxes = torch.as_tensor(boxes, dtype=torch.float32)
             print("boxes shape",boxes.shape)
             # Area of the bounding boxes.
