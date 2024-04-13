@@ -154,6 +154,7 @@ def transform_data():
                 boxes.append([xmin_final, ymin_final, xmax_final, ymax_final])
                     
             boxes = torch.as_tensor(boxes, dtype=torch.float32)
+            print("boxes shape",boxes.shape)
             # Area of the bounding boxes.
             if len(boxes.size()) == 1:
                 # Skip calculation for single-dimensional boxes
