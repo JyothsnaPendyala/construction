@@ -235,7 +235,7 @@ class CustomDataset(Dataset):
                 image_resized = sample['image']
                 target['boxes'] = torch.Tensor(sample['bboxes'])
             
-                
+            print("-----------:", target)   
             return image_resized, target
             
         def __len__(self):
