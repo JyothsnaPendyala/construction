@@ -135,6 +135,9 @@ class CustomDataset(Dataset):
                 print("Image resized, loading XML...")
                 annot_filename = image_name[:-4] + '.xml'
                 annot_file_path = os.path.join(self.labels_path, annot_filename)
+                boxes = []
+                orig_boxes = []
+                labels = []
                 tree = ET.parse(annot_file_path)
                 root = tree.getroot()
 
