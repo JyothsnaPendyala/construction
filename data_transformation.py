@@ -145,42 +145,42 @@ class CustomDataset(Dataset):
                     
                 # Box coordinates for xml files are extracted and corrected for image size given.
                 for member in root.findall('object'):                
-                labels.append(self.classes.index(member.find('name').text))
-                x_center = float(member.find('x-center').text)
-                y_center = float(member.find('y-center').text)
-                width = float(member.find('width').text)
-                height = float(member.find('height').text)
-                xmin = int((x_center - width / 2) * image_width)
-                ymin = int((y_center - height / 2) * image_height)
-                xmax = int((x_center + width / 2) * image_width)
-                ymax = int((y_center + height / 2) * image_height)
+                        labels.append(self.classes.index(member.find('name').text))
+                        x_center = float(member.find('x-center').text)
+                        y_center = float(member.find('y-center').text)
+                        width = float(member.find('width').text)
+                        height = float(member.find('height').text)
+                        xmin = int((x_center - width / 2) * image_width)
+                        ymin = int((y_center - height / 2) * image_height)
+                        xmax = int((x_center + width / 2) * image_width)
+                        ymax = int((y_center + height / 2) * image_height)
+                        
+                        ymax, xmax = self.check_image_and_annotation(
+                            xmax, ymax, image_width, image_height
+                        )
                 
-                ymax, xmax = self.check_image_and_annotation(
-                    xmax, ymax, image_width, image_height
-                )
-                
-                print("xmin----------------------", xmin, ymin, xmax, ymax)
-                
-                orig_boxes.append([xmin, ymin, xmax, ymax])
-                
-                # Resize the bounding boxes according to the
-                # desired `width`, `height`.
-                xmin_final = (xmin/image_width)*self.width
-                xmax_final = (xmax/image_width)*self.width
-                ymin_final = (ymin/image_height)*self.height
-                ymax_final = (ymax/image_height)*self.height
-                
-                boxes.append([xmin_final, ymin_final, xmax_final, ymax_final])
-                print("bpxes--------------------", boxes)
+                        print("xmin----------------------", xmin, ymin, xmax, ymax)
+                        
+                        orig_boxes.append([xmin, ymin, xmax, ymax])
+                        
+                        # Resize the bounding boxes according to the
+                        # desired `width`, `height`.
+                        xmin_final = (xmin/image_width)*self.width
+                        xmax_final = (xmax/image_width)*self.width
+                        ymin_final = (ymin/image_height)*self.height
+                        ymax_final = (ymax/image_height)*self.height
+                        
+                        boxes.append([xmin_final, ymin_final, xmax_final, ymax_final])
+                        print("bpxes--------------------", boxes)
                 
                 boxes = torch.as_tensor(boxes, dtype=torch.float32)
                 print("boxes shape",boxes.shape)
                 # Area of the bounding boxes.
                 if len(boxes.size()) == 1:
                 # Skip calculation for single-dimensional boxes
-                area = None  # Or whatever value you want to assign
+                        area = None  # Or whatever value you want to assign
                 else:
-                area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+                        area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
                 # No crowd instances.
                 iscrowd = torch.zeros((boxes.shape[0],), dtype=torch.int64)
                 # Labels to tensor.
