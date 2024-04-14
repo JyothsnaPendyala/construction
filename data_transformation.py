@@ -189,8 +189,7 @@ class CustomDataset(Dataset):
                 print("Error in load_image_and_labels:", e)
                 raise
 
-           return image, image_resized, orig_boxes, \
-                 boxes, labels, area, iscrowd, (image_width, image_height)
+           return image, image_resized, orig_boxes, boxes, labels, area, iscrowd, (image_width, image_height)
 
         def check_image_and_annotation(self, xmax, ymax, width, height):
             """
