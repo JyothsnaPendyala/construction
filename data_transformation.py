@@ -140,7 +140,7 @@ class CustomDataset(Dataset):
 
                 print("XML loaded, parsing annotations...")
                 # Continue with your box extraction logic here...
-]               image_width = image.shape[1]
+                image_width = image.shape[1]
                 image_height = image.shape[0]
                     
                 # Box coordinates for xml files are extracted and corrected for image size given.
