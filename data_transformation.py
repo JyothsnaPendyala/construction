@@ -193,7 +193,7 @@ class CustomDataset(Dataset):
             return orig_image, result_image/255., torch.tensor(result_boxes), \
                 torch.tensor(np.array(final_classes)), area, iscrowd, dims
 
-        def __getitem__(self, idx):
+        '''def __getitem__(self, idx):
             print("Index-----------------------", idx)
             # Capture the image name and the full image path.
             if not self.mosaic:
@@ -236,7 +236,51 @@ class CustomDataset(Dataset):
                 target['boxes'] = torch.Tensor(sample['bboxes'])
             
             print("-----------:", target)   
+            return image_resized, target'''
+        def __getitem__(self, idx):
+            print("Index-----------------------", idx)
+            try:
+                if not self.mosaic:
+                    print("Loading image and labels...")
+                    image, image_resized, orig_boxes, boxes, labels, area, iscrowd, dims = self.load_image_and_labels(index=idx)
+                    print("Image loaded and processed")
+        
+                if self.train and self.mosaic:
+                    print("Starting mosaic augmentation...")
+                    while True:
+                        image, image_resized, boxes, labels, area, iscrowd, dims = self.load_cutmix_image_and_boxes(idx, resize_factor=(self.height, self.width))
+                        if len(boxes) > 0:
+                            print("Mosaic applied successfully")
+                            break
+
+                print("Preparing target dictionary...")
+                target = {
+                    "boxes": boxes,
+                    "labels": labels,
+                    "area": area,
+                    "iscrowd": iscrowd,
+                    "image_id": torch.tensor([idx])
+                }
+        
+                if self.use_train_aug:
+                    print("Applying training augmentations...")
+                    train_aug = get_train_aug()
+                    sample = train_aug(image=image_resized, bboxes=target['boxes'], labels=labels)
+                    image_resized = sample['image']
+                    target['boxes'] = torch.Tensor(sample['bboxes'])
+                else:
+                    print("Applying standard transforms...")
+                    sample = self.transforms(image=image_resized, bboxes=target['boxes'], labels=labels)
+                    image_resized = sample['image']
+                    target['boxes'] = torch.Tensor(sample['bboxes'])
+                
+                print("Target prepared:", target)
+            except Exception as e:
+                print("Error during getting item:", e)
+                raise
+        
             return image_resized, target
+
             
         def __len__(self):
             return len(self.all_images)
